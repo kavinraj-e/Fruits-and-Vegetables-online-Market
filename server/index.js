@@ -15,7 +15,7 @@ connection();
 
 app.use(express.json({limit:"100mb"}));
 app.use(cors({
-    origin : "http://localhost:3000",
+    origin : "http://localhost:3001",
     credentials: true // Allow cookies to be sent in cross-origin requests
   }));
   
@@ -23,7 +23,7 @@ app.use(cors({
 app.use(cookieParser());
 
 
-
+ 
 const products = require('./Routes/FruitsRoutes');
 const user = require('./Routes/UserRoutes');
 const cartRoutes = require('./Routes/cartRoutes');
@@ -73,6 +73,7 @@ app.get('/api/getUserRole', async (req, res) => {
 
 ///end
 
-
-const port = process.env.PORT || 8000;
-app.listen(port, console.log(`Listening on port ${port}...`));
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});

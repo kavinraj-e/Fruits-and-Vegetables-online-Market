@@ -46,18 +46,18 @@ exports.updateProduct = async (req, res) => {
     const { id } = req.params;
     
     try {
-      const product = await Product.findById(id);
-      if (!product) {
-        return res.status(404).json({ message: 'Product not found' });
-      }
-  
-      await product.remove();
-      res.status(200).json({ message: 'Product deleted successfully' });
+        const product = await Product.findById(id);
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        await Product.findByIdAndDelete(id); // Corrected this line
+        res.status(200).json({ message: 'Product deleted successfully' });
     } catch (err) {
-      res.status(400).json({ message: err.message });
+        res.status(400).json({ message: err.message });
     }
-  };
-  
+};
+
 //// admin routes
 
 
