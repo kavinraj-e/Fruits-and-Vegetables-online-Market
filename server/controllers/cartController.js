@@ -21,7 +21,6 @@ exports.addToCart = async (req, res) => {
       cart = new Cart({ userId, items: [] });
     }
 
-    // Ensure `productId` and `quantity` are correctly handled as strings or numbers
     const parsedProductId = String(productId);
     const parsedQuantity = parseInt(quantity, 10);
 
@@ -32,10 +31,10 @@ exports.addToCart = async (req, res) => {
     let item = cart.items.find(item => String(item.productId) === parsedProductId);
 
     if (item) {
-      // If the product already exists in the cart, update its quantity
+
       item.quantity += parsedQuantity;
     } else {
-      // If the product doesn't exist in the cart, add it as a new item
+     
       cart.items.push({ productId: parsedProductId, quantity: parsedQuantity });
     }
 
@@ -67,7 +66,6 @@ exports.getCartItems = async (req, res) => {
       return res.status(404).json({ error: 'Cart not found' });
     }
 
-    // Fetch additional details for each product in the cart
     const cartItemsWithDetails = await Promise.all(cart.items.map(async (item) => {
       const product = await Product.findById(item.productId);
       return { ...item.toObject(), product };
@@ -149,7 +147,6 @@ exports.getwishItems = async (req, res) => {
       return res.status(404).json({ error: 'Cart not found' });
     }
 
-    // Fetch additional details for each product in the cart
     const cartItemsWithDetails = await Promise.all(cart.items.map(async (item) => {
       const product = await Product.findById(item.productId);
       return { ...item.toObject(), product };

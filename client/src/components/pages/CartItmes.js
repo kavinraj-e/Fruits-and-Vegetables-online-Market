@@ -19,7 +19,7 @@ const CartItems = ({cartItems, removeItem}) => {
       ))}
           
       
-          {/* Continue Shopping link */}
+      
           <Link to="/" className="flex font-semibold text-indigo-600 text-sm mt-10">
             <svg className="fill-current mr-2 text-indigo-600 w-4" viewBox="0 0 448 512">
               <path
@@ -29,7 +29,7 @@ const CartItems = ({cartItems, removeItem}) => {
             Continue Shopping
           </Link>
         </div>
-        {/* Order Summary */}
+      
         <div id="summary" className="w-full sm:w-1/4 md:w-1/2 px-8 py-10">
           <h1 className="font-semibold text-2xl border-b pb-8">Order Summary</h1>
           <div className="flex justify-between mt-10 mb-5">
@@ -50,7 +50,7 @@ const CartItems = ({cartItems, removeItem}) => {
           <div className="border-t mt-8">
             <div className="flex font-semibold justify-between py-6 text-sm uppercase">
               <span>Total cost</span>
-              <span>${totalValue/* assuming $10 for standard shipping */}</span>
+              <span>${totalValue}</span>
             </div>
             <button className="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full">Checkout</button>
           </div>

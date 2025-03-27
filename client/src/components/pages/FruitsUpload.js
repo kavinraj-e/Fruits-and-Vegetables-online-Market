@@ -13,10 +13,15 @@ const FruitsUpload = () => {
     origin: ''
   });
 
-  const [image, setImage] = useState(""); // State for image
+  const [image, setImage] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if ((name === "price" || name === "quantityAvailable") && value < 0) return;
+
+    setFormData({ ...formData, [name]: value });
   };
 
   const submitImage = async () => {
@@ -46,18 +51,18 @@ const FruitsUpload = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsUploading(true);
+
     try {
       let imageUrl = formData.imageUrl;
       if (image) {
-        imageUrl = await submitImage(); // Upload image before form submission
+        imageUrl = await submitImage();
       }
 
       const updatedFormData = { ...formData, imageUrl };
-      const response = await axios.post('http://localhost:8000/api/product', updatedFormData);
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/product`, updatedFormData);
       toast.success('Product uploaded successfully!');
-      console.log('Response:', response.data);
 
-      // Optionally, you can reset the form after successful submission
       setFormData({
         name: '',
         description: '',
@@ -67,44 +72,122 @@ const FruitsUpload = () => {
         category: '',
         origin: ''
       });
-      setImage("");
+      setImage(null);
     } catch (error) {
       console.error('Error:', error.message);
-      toast.warning('Login First to upload product.');
+      toast.error('Failed to upload product. Please try again.');
+    } finally {
+      setIsUploading(false);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-gray-100 rounded-lg shadow-lg">
-      <h1 className="text-xl font-semibold mb-6">Upload Product</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="name" className="block mb-2 font-semibold">Name:</label>
-        <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} className="w-full px-4 py-2 mb-4 border rounded-md" required />
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+      <div className="w-full max-w-2xl bg-gray-800 rounded-lg shadow-2xl p-8">
+        <h1 className="text-3xl font-bold text-white mb-8 text-center">Upload Product</h1>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-300">Name:</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              required
+            />
+          </div>
 
-        <label htmlFor="description" className="block mb-2 font-semibold">Description:</label>
-        <textarea id="description" name="description" value={formData.description} onChange={handleChange} className="w-full px-4 py-2 mb-4 border rounded-md" required />
+          <div>
+            <label htmlFor="description" className="block text-sm font-medium text-gray-300">Description:</label>
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              className="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              rows="4"
+              required
+            />
+          </div>
 
-        <label htmlFor="price" className="block mb-2 font-semibold">Price:</label>
-        <input type="number" id="price" name="price" value={formData.price} onChange={handleChange} className="w-full px-4 py-2 mb-4 border rounded-md" required />
+          <div>
+            <label htmlFor="price" className="block text-sm font-medium text-gray-300">Price:</label>
+            <input
+              type="number"
+              id="price"
+              name="price"
+              min="0"
+              value={formData.price}
+              onChange={handleChange}
+              className="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              required
+            />
+          </div>
 
-        <label htmlFor="quantityAvailable" className="block mb-2 font-semibold">Quantity Available:</label>
-        <input type="number" id="quantityAvailable" name="quantityAvailable" value={formData.quantityAvailable} onChange={handleChange} className="w-full px-4 py-2 mb-4 border rounded-md" required />
+          <div>
+            <label htmlFor="quantityAvailable" className="block text-sm font-medium text-gray-300">Quantity Available:</label>
+            <input
+              type="number"
+              id="quantityAvailable"
+              name="quantityAvailable"
+              min="0"
+              value={formData.quantityAvailable}
+              onChange={handleChange}
+              className="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              required
+            />
+          </div>
 
-        <label htmlFor="category" className="block mb-2 font-semibold">Category:</label>
-        <select id="category" name="category" value={formData.category} onChange={handleChange} className="w-full px-4 py-2 mb-4 border rounded-md" required>
-          <option value="">Select Category</option>
-          <option value="fruit">Fruit</option>
-          <option value="vegetable">Vegetable</option>
-        </select>
+          <div>
+            <label htmlFor="category" className="block text-sm font-medium text-gray-300">Category:</label>
+            <select
+              id="category"
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              required
+            >
+              <option value="">Select Category</option>
+              <option value="fruit">Fruit</option>
+              <option value="vegetable">Vegetable</option>
+            </select>
+          </div>
 
-        <label htmlFor="origin" className="block mb-2 font-semibold">Origin:</label>
-        <input type="text" id="origin" name="origin" value={formData.origin} onChange={handleChange} className="w-full px-4 py-2 mb-4 border rounded-md" required />
+          <div>
+            <label htmlFor="origin" className="block text-sm font-medium text-gray-300">Origin:</label>
+            <input
+              type="text"
+              id="origin"
+              name="origin"
+              value={formData.origin}
+              onChange={handleChange}
+              className="mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              required
+            />
+          </div>
 
-        <label htmlFor="image" className="block mb-2 font-semibold">Upload Image:</label>
-        <input type='file' id="image" onChange={(e) => setImage(e.target.files[0])} className="mb-4" />
+          <div>
+            <label htmlFor="image" className="block text-sm font-medium text-gray-300">Upload Image:</label>
+            <input
+              type="file"
+              id="image"
+              onChange={(e) => setImage(e.target.files[0])}
+              className="mt-1 block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600"
+            />
+          </div>
 
-        <button type="submit" className="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-md">Submit</button>
-      </form>
+          <button
+            type="submit"
+            disabled={isUploading}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-200 disabled:bg-blue-400 disabled:cursor-not-allowed"
+          >
+            {isUploading ? 'Uploading...' : 'Submit'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

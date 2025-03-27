@@ -14,9 +14,8 @@ function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/products`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/products`);
         setProducts(response.data);
-        toast.success('Product Fetch successfully!');
         setLoading(false);
       } catch (error) {
         console.log(error);
@@ -30,19 +29,22 @@ function Home() {
     loading ? <Loader /> : (
       <div className='bg-[f8f8ff]'>
         <Hero />
-        <div className="flex items-center bg-white shadow-lg rounded-full px-4 py-2 w-96 border border-gray-200 focus-within:border-orange-500 transition-all mx-auto my-10">
-          <Search className="w-5 h-5 text-gray-500" />
+
+       
+        <div className="flex items-center w-full max-w-lg mx-auto my-10 border-b-2 border-gray-300 focus-within:border-green-500 transition-all">
+          <Search className="w-5 h-5 text-gray-500 mr-2" />
           <input
             type="text"
             value={searchText}
-            className="flex-1 bg-transparent outline-none px-3 text-gray-700 placeholder-gray-400"
-            placeholder="Search..."
+            className="flex-1 bg-transparent outline-none text-gray-800 placeholder-gray-400 py-2"
+            placeholder="Search for fresh fruits and vegetables..."
             onChange={(e) => setSearchText(e.target.value)}
           />
         </div>
 
         <h1 className='text-3xl mx-5 my-5 font-bold font-heading'>Fresh Product</h1>
-        <div className='flex flex-wrap my-10 gap-10 mx-10 '>
+        <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 my-8 gap-4 mx-5'>
+
           {products.filter((product) => product.name.toLowerCase().includes(searchText.toLowerCase())).map(product => (
             <Product key={product._id} product={product} />
           ))}

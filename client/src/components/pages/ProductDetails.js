@@ -13,7 +13,7 @@ const ProductDetails = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/products/${id}`, { withCredentials: true });
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/products/${id}`, { withCredentials: true });
         setProduct(response.data);
       } catch (error) {
         console.log(error);
@@ -26,7 +26,7 @@ const ProductDetails = () => {
   const addtocart = async () => {
 
     try {
-      await axios.post('http://localhost:8000/api/addtocart', { productId: id, quantity: 1 }, { withCredentials: true });
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/addtocart`, { productId: id, quantity: 1 }, { withCredentials: true });
       toast.success('Items Add to Card successfully!');
     } catch (error) {
       toast.error('Login first to Continue successfully!');

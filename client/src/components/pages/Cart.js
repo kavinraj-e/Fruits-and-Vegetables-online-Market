@@ -10,9 +10,9 @@ const Cart = () => {
 
   const fetchCartItems = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/cart', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/cart`, {
         method: 'GET',
-        credentials: 'include' // Send cookies with the request
+        credentials: 'include' 
       });
       if (!response.ok) {
         throw new Error('Failed to fetch cart items');

@@ -34,7 +34,6 @@ exports.getElementById = async (req, res) => {
     }
   };
 
-
   
   exports.getAllProducts = async (req, res) => {
     try {

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { deleteUser,logout,login,register } = require('../controllers/UserControllers');
 
-// Routes
+
 router.post('/register', register);
 router.post('/login', login);
 router.get('/logout', logout);

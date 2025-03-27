@@ -6,7 +6,7 @@ module.exports = async (req, res, next) => {
   try {
 
     const  token    = req.cookies.token;
-   
+    console.log(token);
    if( !token ){
         console.log("Login first to handle this resource");
         return res.status(400).send({

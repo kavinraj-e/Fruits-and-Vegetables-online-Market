@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/UserModel');
 const sendToken = require('../utils/jwt');
-// Register a new user
+
+
 exports.register = async (req, res) => {
   try {
     const { username, email, phoneNumber, password } = req.body;
@@ -16,7 +17,6 @@ exports.register = async (req, res) => {
   } 
 };
 
-// Login user
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -36,17 +36,17 @@ exports.login = async (req, res) => {
   }
 };
 
-// Logout user
+
 exports.logout = (req, res) => {
-  // Clear cookie
+  
   res.clearCookie('token');
   res.status(200).json({ message: 'Logged out successfully' });
 };
 
-// Delete user
+
 exports.deleteUser = async (req, res) => {
   try {
-    const userId = req.userId; // Assuming you have middleware to get userId from JWT
+    const userId = req.userId; 
     await User.findByIdAndDelete(userId);
     res.status(200).json({ message: 'User deleted successfully' });
   } catch (error) {

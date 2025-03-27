@@ -58,7 +58,7 @@ exports.updateProduct = async (req, res) => {
     }
 };
 
-//// admin routes
+
 
 
 

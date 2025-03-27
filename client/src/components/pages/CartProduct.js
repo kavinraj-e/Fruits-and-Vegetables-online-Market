@@ -6,7 +6,7 @@ function CartProduct({ item }) {
 
   const updateQuantity = async (itemId, newQuantity) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/update/${item._id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/update/${item._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ function CartProduct({ item }) {
       }
       const updatedCart = await response.json();
       setQuantity(newQuantity);
-      toast.success('items Quantity Updated',newQuantity );
+      toast.success('Item quantity updated');
     } catch (error) {
       console.error('Error updating item quantity:', error);
       // Handle error
@@ -28,17 +28,16 @@ function CartProduct({ item }) {
 
   const removeItem = async (itemId) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/remove/${itemId}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/remove/${itemId}`, {
         method: 'DELETE',
         credentials: 'include',
       });
-      toast.success('Remove successfully!');
-      window.location.href = 'http://localhost:3000/cart';
+      toast.success('Removed successfully!');
+      window.location.href = '/cart';
     
       if (!response.ok) {
         throw new Error('Failed to remove item from cart');
       }
-   
     } catch (error) {
       console.error('Error removing item:', error);
       // Handle error
@@ -46,48 +45,61 @@ function CartProduct({ item }) {
   };
 
   return (
-    <div className="md:flex items-stretch py-8 md:py-10 lg:py-8 border-t border-gray-50">
-      <div className="md:w-4/12 2xl:w-1/4 w-full">
-        <img src={item.product.imageUrl} alt={item.product.name} className="h-full object-center object-cover md:block hidden" />
-        <img src={item.product.imageUrl} alt={item.product.name} className="md:hidden w-full h-full object-center object-cover" />
+    <div className="flex flex-col lg:flex-row items-center py-8 md:py-10 lg:py-8 border-t border-gray-200">
+      <div className="w-full lg:w-1/4">
+        <img
+          src={item.product.imageUrl}
+          alt={item.product.name}
+          className="w-full h-48 object-center object-cover rounded-lg shadow-md"
+        />
       </div>
-      <div className="md:pl-3 md:w-8/12 2xl:w-3/4 flex flex-col justify-center">
-        <div className="flex items-center justify-between w-full">
-          <p className="text-base font-black leading-none text-gray-800">{item.product.name}</p>
-          <div className="flex items-center">
+      <div className="flex flex-col justify-between w-full lg:w-3/4 lg:pl-6 mt-6 lg:mt-0">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold text-gray-800">{item.product.name}</h2>
+          <div className="flex items-center space-x-2">
             <button
-              className="px-2 py-1 bg-gray-200 text-gray-800"
+              className="px-3 py-1 bg-gray-200 text-gray-800 rounded-lg"
               onClick={() => updateQuantity(item._id, quantity - 1)}
               disabled={quantity <= 1}
             >
               -
             </button>
-            <button
+            <input
               type="number"
               value={quantity}
-              className="w-6 h-6 border border-gray-200 text-center focus:outline-none mx-2"
+              className="w-12 h-8 text-center border rounded-lg focus:outline-none"
               onChange={(e) => updateQuantity(item._id, parseInt(e.target.value))}
               min="1"
-            >
-      {quantity}
-              </button>
+            />
             <button
-              className="px-2 py-1 bg-gray-200 text-gray-800"
+              className="px-3 py-1 bg-gray-200 text-gray-800 rounded-lg"
               onClick={() => updateQuantity(item._id, quantity + 1)}
             >
               +
             </button>
           </div>
         </div>
-        <p className="text-xs leading-3 text-gray-600 pt-2">Type: {item.product.category}</p>
-        <p className="text-xs leading-3 text-gray-600 py-4">Origin: {item.product.origin}</p>
-        <p className="w-96 text-xs leading-3 text-gray-600">Description: {item.product.description}</p>
-        <div className="flex items-center justify-between pt-5">
-          <div className="flex items-center">
-            <p className="text-xs leading-3 underline text-gray-800 cursor-pointer">Add to favorites</p>
-            <p className="text-xs leading-3 underline text-red-500 pl-5 cursor-pointer" onClick={() => removeItem(item._id)}>Remove</p>
+
+        <p className="text-sm text-gray-600">Category: {item.product.category}</p>
+        <p className="text-sm text-gray-600">Origin: {item.product.origin}</p>
+        <p className="text-sm text-gray-600 mt-2">{item.product.description}</p>
+
+        <div className="flex items-center justify-between mt-4">
+          <div className="flex items-center space-x-4">
+            <button
+              className="text-sm text-blue-500 hover:text-blue-700"
+              onClick={() => toast.info('Added to favorites!')}
+            >
+              Add to favorites
+            </button>
+            <button
+              className="text-sm text-red-500 hover:text-red-700"
+              onClick={() => removeItem(item._id)}
+            >
+              Remove
+            </button>
           </div>
-          <p className="text-base font-black leading-none text-gray-800">${item.product.price}</p>
+          <p className="text-lg font-semibold text-gray-800">${item.product.price}</p>
         </div>
       </div>
     </div>

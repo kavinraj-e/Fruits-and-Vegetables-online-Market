@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Product = require('./FruitsModels'); // Import the Product model
+const Product = require('./FruitsModels'); 
 
 const cartSchema = new mongoose.Schema({
   userId: {
@@ -25,14 +25,13 @@ const cartSchema = new mongoose.Schema({
   }
 });
 
-// Pre-save middleware to calculate total price
 cartSchema.pre('save', async function (next) {
   const cart = this;
   let total = 0;
 
   for (const item of cart.items) {
     const product = await Product.findById(item.productId);
-    total += product.price * item.quantity; // Assuming the Product model has a 'price' field
+    total += product.price * item.quantity; 
   }
 
   cart.totalprice = total;

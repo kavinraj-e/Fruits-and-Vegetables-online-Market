@@ -1,5 +1,3 @@
-// controllers/wishlistController.js
-
 const Wishlist = require('../models/WishlistItem');
 const Product = require('../models/FruitsModels');
 const jwt = require('jsonwebtoken')

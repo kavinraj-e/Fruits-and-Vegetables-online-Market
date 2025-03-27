@@ -16,23 +16,36 @@ import Admindashboard from './components/pages/Admindashboard';
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
+import Category from './components/pages/Category';
+import Service from './components/pages/Service';
+import Contact from './components/pages/Contact';
+import Hero from './components/Layout/Hero';
+import Chatbot from './components/pages/Chatbot';
 
 function App() {
   return (
     <>
       <ToastContainer />
       <Router>
-        <AuthRedirect /> {/* Handles redirection based on user role */}
+        <AuthRedirect /> 
         <Header />
+       
+      <Chatbot />
+  
 
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Home/>} />
           <Route path="/upload" element={<FruitsUpload />} />
           <Route path="*" element={<Error />} />
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<SignIn />} />
           <Route path="/register" element={<SignUp />} />
+          <Route path="/logout" element={<Logout />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/service" element={<Service />} />
+          <Route path="/category" element={<Category />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/admin" element={<Admindashboard />} />
@@ -44,38 +57,38 @@ function App() {
   );
 }
 
-// ✅ Function to handle user redirection based on role
+
 function AuthRedirect() {
   const navigate = useNavigate();
   const [role, setRole] = useState('');
 
   useEffect(() => {
-    const token = Cookies.get('token'); // Get token from cookies
+    const token = Cookies.get('token'); 
 
     if (token) {
       try {
-        const decoded = jwtDecode(token); // Decode the token
-        const userRole = decoded.roles; // Extract roles (array)
+        const decoded = jwtDecode(token); 
+        const userRole = decoded.roles; 
 
         setRole(userRole);
-        console.log(userRole); // Debugging
+        console.log(token+"      get-cookie"); 
 
-        // ✅ Corrected condition for array
+        
         if (userRole.includes('admin')) {
-          navigate('/admin'); // Redirect admin users to the admin dashboard
+          navigate('/home'); 
         } else {
-          navigate('/'); // Redirect normal users to the homepage
+          navigate('/home'); 
         }
       } catch (error) {
         console.error('Invalid token', error);
-        navigate('/login'); // Redirect to login if token is invalid
+        navigate('/login'); 
       }
     } else {
-      navigate('/login'); // Redirect to login if no token is found
+      navigate('/login'); 
     }
   }, []);
 
-  return null; // This component doesn’t render anything
+  return null; 
 }
 
 
